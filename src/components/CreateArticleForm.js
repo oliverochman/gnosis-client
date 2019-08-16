@@ -12,13 +12,15 @@ class CreateArticleForm extends Component {
 
   async onSave(e) {
     e.preventDefault();
-    debugger;
     let response = await saveArticle(this.state.author, this.state.title, this.state.body);
     if (response.status === 200) {
-      this.setState({ articleSaved: true });
-    } else {
       this.setState({
-        errorMessage: response.message
+        articleSaved: true
+      });
+    } else {
+      debugger;
+      this.setState({
+        errorMessage: response.data.body.message
       })
     }
     console.log(this.state.author);
@@ -30,7 +32,9 @@ class CreateArticleForm extends Component {
     let articleStatus;
     if (this.state.articleSaved === true) {
       articleStatus = "Post successfully created";
-    } else if (this.state.articleSaved === true && this.state.errorMessage !== '') {
+    } else if (this.state.articleSaved === false && this.state.errorMessage !== '') {
+      debugger;
+
       articleStatus = this.state.errorMessage;
     }
 
