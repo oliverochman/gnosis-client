@@ -83,6 +83,11 @@ class CreateArticleForm extends Component {
       )
     }
 
+    // let createArticle;
+    // if (this.props,currentUser.role === "rg_user") {
+    //   createArticle = <button id="create-article" onClick={this.formHandler}>Create Article</button>
+    // }
+
     return (
       <div id="create-article-component">
         <button id="create-article" onClick={this.formHandler}>Create Article</button>

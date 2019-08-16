@@ -47,6 +47,7 @@ export class LoginForm extends Component {
 }
 
 const mapStateToProps = (state) => {
+  debugger;
   return {
     currentUser: state.reduxTokenAuth.currentUser
   }

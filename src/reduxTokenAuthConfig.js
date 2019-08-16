@@ -1,10 +1,10 @@
-
 import { generateAuthActions } from 'redux-token-auth'
 
 const config = {
   authUrl: "http://localhost:3000/api/v0/auth",
   userAttributes: {
-    uid: 'uid'
+    uid: 'uid',
+    role: 'role'
   }
 }
 

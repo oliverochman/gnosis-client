@@ -10,7 +10,8 @@ describe("RG can post article", () => {
       response: "fixture:successful_saving_article_response.json"
     });
     cy.login("harvard@mail.com", "password");
-
+    // make sure that #create-article button cant be seen before login in
+    // and that users with the role of "rg_user" can see the button
     cy.get("#create-article").click();
     cy.get("#post-article-form").within(() => {
       cy.get("#author").type("John Doe");
@@ -30,7 +31,7 @@ describe("RG can post article", () => {
       response: "fixture:unsuccessful_saving_article_response.json",
       status: 404
     });
-    cy.visit("http://localhost:3001");
+    cy.login("harvard@mail.com", "password");
 
     cy.get("#create-article").click();
     cy.get("#post-article-form").within(() => {
@@ -42,4 +43,7 @@ describe("RG can post article", () => {
     });
     cy.contains("Title cant be blank");
   })
+
+  // make sad path where user role is something different then "rg_user" 
+  // and make sure that user cant see the #create-article button
 });
