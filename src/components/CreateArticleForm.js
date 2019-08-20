@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { saveArticle } from "../modules/saveArticle";
 import { connect } from "react-redux";
+import { Redirect } from 'react-router';
+import ReactTimeout from 'react-timeout';
+
+
 
 class CreateArticleForm extends Component {
   state = {
@@ -9,12 +13,6 @@ class CreateArticleForm extends Component {
     body: "",
     errorMessage: "",
     articleSaved: false
-  };
-
-  formHandler = () => {
-    this.setState({
-      renderArticleForm: !this.state.renderArticleForm
-    });
   };
 
   async saveArticleHandler(e) {
@@ -27,7 +25,6 @@ class CreateArticleForm extends Component {
     if (response.status === 200) {
       this.setState({
         articleSaved: true,
-        renderArticleForm: false
       });
     } else {
       this.setState({
@@ -36,22 +33,33 @@ class CreateArticleForm extends Component {
     }
   }
 
+  clearMessage  = () => {
+    return dispatch => {
+
+      this.props.setTimeout(() => {
+        dispatch('HIDE_FLASH_MESSAGE');
+      }, 3000);
+    };
+  }
+
   render() {
     let articleStatus;
     let createArticleForm;
-    let createArticleButton;
 
     if (this.state.articleSaved === true) {
-      articleStatus = "Article successfully created";
+      this.props.dispatch({ type: 'SHOW_FLASH_MESSAGE' })
+      this.clearMessage()
+      articleStatus = <Redirect to="/"/>
     } else if (
       this.state.articleSaved === false &&
       this.state.errorMessage !== ""
     ) {
       articleStatus = this.state.errorMessage;
     }
+    
 
-    if (this.state.renderArticleForm === true) {
-      createArticleForm = (
+    return (
+      <div id="create-article-component">
         <form
           id="create-article-form"
           onSubmit={e => this.saveArticleHandler(e)}
@@ -85,24 +93,10 @@ class CreateArticleForm extends Component {
             type="submit"
             value="Create"
           />
-        </form>
-      );
-    }
-    if (this.props.currentUser.attributes.role === "research_group_user") {
-      createArticleButton = (
-        <button id="create-article-button" onClick={this.formHandler}>
-          Create Article
-        </button>
-      );
-    }
-
-    return (
-      <div id="create-article-component">
-        {createArticleButton}
-        {createArticleForm}
+        </form>        
         {articleStatus}
       </div>
-    );
+    )
   }
 }
 

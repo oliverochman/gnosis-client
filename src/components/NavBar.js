@@ -2,15 +2,30 @@ import React, { Component } from 'react';
 import { Header } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import { Menu, Input } from 'semantic-ui-react';
-import './styling/Navbar.css';
+import { connect } from 'react-redux';
+import '../styling/Navbar.css';
+import AlertMessage from './AlertMessage'
 
-export default class NavBar extends Component {
+
+class NavBar extends Component {
   state = { activeItem: 'latest news' }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
+    let createArticleButton;
+    let flashMessage;
     const { activeItem } = this.state
+
+    if (this.props.flashMessage === true) {
+      flashMessage = <AlertMessage />
+    }
+
+    
+    if (this.props.currentUser.attributes.role === "research_group_user") {
+      createArticleButton = <Menu.Item as={NavLink} to="/createarticle" id="create-article-button">Create Article</Menu.Item>
+    }
+
     return (
       <div className='page'>
         <Menu secondary>
@@ -22,12 +37,21 @@ export default class NavBar extends Component {
             <Menu.Item name='outreach' active={activeItem === 'home'} onClick={this.handleItemClick} />
           <Menu.Menu position='right'>
             <Menu.Item><Input icon='search' placeholder='Search...' /></Menu.Item>
-            <Menu.Item as={NavLink} to="/login-form">Log In</Menu.Item>
+            <Menu.Item as={NavLink} to="/login-form" id="login-button">Log In</Menu.Item>
             <Menu.Item as={NavLink} to="/signup">Sign Up</Menu.Item>
-            <Menu.Item as={NavLink} to="/createarticle">Create Article</Menu.Item>
+            {createArticleButton} 
+            {flashMessage}
           </Menu.Menu>
         </Menu>
       </div>
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    currentUser: state.reduxTokenAuth.currentUser,
+    flashMessage: state.flashMessage.flashMessage
+  };
+};
+export default connect(mapStateToProps)(NavBar);
