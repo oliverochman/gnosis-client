@@ -5,8 +5,8 @@ describe("University Sign-Up", () => {
   it("User can successfully sign-up as a University", () => {
     cy.route({
       method: "POST",
-      url: "http://localhost:3000/api/v0/registration",
-      response: "fixture:successful_saving_uniAccount_response.json"
+      url: "http://localhost:3000/api/v0/auth",
+      response: "fixture:successful_sign_up_of_uniAccount_response.json"
     });
     cy.university_success_signup(
       "University",
@@ -31,7 +31,7 @@ describe("University Sign-Up", () => {
   it("User can't sign up without all form fields filled out (sad path)", () => {
     cy.route({
       method: "POST",
-      url: "http://localhost:3000/api/v0/registration",
+      url: "http://localhost:3000/api/v0/auth",
       response: "fixture:unsuccessful_saving_uniAccount_response.json",
       status: 404
     });

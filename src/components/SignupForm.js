@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import PaymentForm from "./PaymentForm";
-import { saveNewUser } from "../modules/saveNewUser";
+// import { saveNewUser } from "../modules/saveNewUser";
 import { Container, Form, Button } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { registerUser } from "../redux/actions/reduxTokenAuthConfig";
+
 
 export class Signupform extends Component {
   state = {
@@ -18,23 +21,32 @@ export class Signupform extends Component {
 
   async saveNewUserHandler(e) {
     e.preventDefault();
-    let response = await saveNewUser(
-      this.state.name,
-      this.state.email,
-      this.state.password,
-      this.state.password_confirmation,
-      this.state.accountType
-    );
-    if (response.status === 200) {
-      this.setState({
-        userSaved: true,
-        renderSignupForm: false
-      });
-    } else {
-      this.setState({
-        errorMessage: response.data.body.message
-      });
-    }
+    const { registerUser } = this.props;
+    const {
+      name,
+      email,
+      password,
+      password_confirmation,
+      accountType
+    } = this.state;
+    registerUser({
+      name,
+      email,
+      password,
+      password_confirmation,
+      accountType
+    })
+      .then(() => {
+        this.setState({
+          userSaved: true,
+          renderSignupForm: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          errorMessage: error.response.data.message
+        });
+      })
   }
 
   render() {
@@ -157,4 +169,13 @@ export class Signupform extends Component {
   }
 }
 
-export default Signupform;
+const mapStateToProps = state => {
+  return {
+    currentUser: state.reduxTokenAuth.currentUser
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(Signupform);

@@ -5,7 +5,12 @@ const config = {
   userAttributes: {
     uid: "uid",
     role: "role"
-  }
+  },
+  userRegistrationAttributes: {
+    password_confirmation: 'password_confirmation',
+    role: 'role',
+    name: 'name'
+  },
 };
 
 const {
